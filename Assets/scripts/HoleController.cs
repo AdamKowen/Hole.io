@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class HoleController : MonoBehaviour
@@ -73,7 +72,11 @@ public class HoleController : MonoBehaviour
         sw.IsBeingSwallowed = true;
 
         // Disable physics so it won't interfere while animating into the hole.
-        if (sw.rb != null) { sw.rb.linearVelocity = Vector2.zero; sw.rb.isKinematic = true; }
+        if (sw.rb != null)
+        {
+            sw.rb.linearVelocity = Vector2.zero;
+            sw.rb.bodyType = RigidbodyType2D.Kinematic; // <-- updated
+        }
         if (sw.col != null) sw.col.enabled = false;
 
         Vector3 startPos = sw.transform.position;
@@ -84,21 +87,19 @@ public class HoleController : MonoBehaviour
         while (t < 1f)
         {
             t += Time.deltaTime / Mathf.Max(0.01f, swallowDuration);
-            // Ease-in
-            float k = t * t;
+            float k = t * t; // Ease-in
             sw.transform.position = Vector3.Lerp(startPos, endPos, k);
             sw.transform.localScale = Vector3.Lerp(startScale, Vector3.zero, k);
             yield return null;
         }
 
-        // Destroy swallowed object
         Destroy(sw.gameObject);
 
-        // Grow hole a bit (proportional to object size so bigger objects grow more)
         float grow = growthPerObject * Mathf.Max(0.4f, sw.size);
         transform.localScale += new Vector3(grow, grow, 0f);
     }
-    
+
+
     void OnTriggerStay2D(Collider2D other)
     {
         var sw = other.GetComponent<Swallowable>();
