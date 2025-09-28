@@ -7,50 +7,48 @@ public class HoleController : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 6f;
 
-    [Header("Swallowing")]
-    [Tooltip("How big the hole must be relative to target size to allow swallowing (>= factor * target.size).")]
-    public float swallowFactor = 1.05f;
-    [Tooltip("How much scale to add per swallowed object (can be multiplied by target size).")]
-    public float growthPerObject = 0.12f;
+    [Header("Levels (simple)")]
+    [Tooltip("Current hole level (1..7).")]
+    [Range(1,7)] public int holeLevel = 1;
+
+    [Tooltip("How many swallows before we grow once.")]
+    public int eatsPerLevel = 1;
+
+    [Tooltip("How much to grow (scale multiplier) on each level-up. 0.12 = +12%.")]
+    public float growthPerLevel = 0.12f;
+
+    [Header("Swallowing FX")]
     [Tooltip("Seconds for the swallow animation.")]
     public float swallowDuration = 0.35f;
 
-    private Rigidbody2D _rb;
-    private Vector2 _input;
-
-    // Cache approximate base radius from collider at scale=1 for size comparisons.
-    private float _baseRadius = 0.5f; // default; will be updated from CircleCollider2D if present
+    Rigidbody2D _rb;
+    Vector2 _input;
+    Collider2D _triggerCol;
+    int _swallowedSinceLevelUp = 0;
 
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        var circle = GetComponent<CircleCollider2D>();
-        if (circle != null)
-        {
-            // CircleCollider2D radius is already scale-independent; we'll use it as base.
-            _baseRadius = circle.radius;
-        }
+        _triggerCol = GetComponent<Collider2D>();
+
+        _rb.gravityScale = 0f;
+        _rb.freezeRotation = true;
+
+        // חשוב: רק קוליידר אחד על החור, והוא Trigger.
+        if (_triggerCol != null) _triggerCol.isTrigger = true;
     }
 
     void Update()
     {
-        // Basic WASD/Arrows movement
         _input.x = Input.GetAxisRaw("Horizontal");
         _input.y = Input.GetAxisRaw("Vertical");
-        _input = _input.normalized;
+        _input.Normalize();
     }
 
     void FixedUpdate()
     {
-        // Kinematic rb: MovePosition for smooth movement
         Vector2 targetPos = _rb.position + _input * moveSpeed * Time.fixedDeltaTime;
         _rb.MovePosition(targetPos);
-    }
-
-    // Current effective hole size (radius) considering scale.
-    float CurrentHoleRadius()
-    {
-        return _baseRadius * transform.localScale.x;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -58,36 +56,31 @@ public class HoleController : MonoBehaviour
         var sw = other.GetComponent<Swallowable>();
         if (sw == null || sw.IsBeingSwallowed) return;
 
-        float holeR = CurrentHoleRadius();
-        // Allow swallow if hole is modestly larger than the object's declared size.
-        if (holeR >= swallowFactor * sw.size)
-        {
+        // תנאי יחיד: לפי Level
+        if (holeLevel >= sw.requiredLevel)
             StartCoroutine(SwallowRoutine(sw));
-        }
-        // else: too big for now → do nothing
     }
 
     IEnumerator SwallowRoutine(Swallowable sw)
     {
         sw.IsBeingSwallowed = true;
 
-        // Disable physics so it won't interfere while animating into the hole.
         if (sw.rb != null)
         {
             sw.rb.linearVelocity = Vector2.zero;
-            sw.rb.bodyType = RigidbodyType2D.Kinematic; // <-- updated
+            sw.rb.bodyType = RigidbodyType2D.Kinematic;
         }
         if (sw.col != null) sw.col.enabled = false;
 
         Vector3 startPos = sw.transform.position;
-        Vector3 endPos = transform.position; // pull to hole center
+        Vector3 endPos = transform.position;
         Vector3 startScale = sw.transform.localScale;
 
         float t = 0f;
         while (t < 1f)
         {
             t += Time.deltaTime / Mathf.Max(0.01f, swallowDuration);
-            float k = t * t; // Ease-in
+            float k = t * t; // ease-in
             sw.transform.position = Vector3.Lerp(startPos, endPos, k);
             sw.transform.localScale = Vector3.Lerp(startScale, Vector3.zero, k);
             yield return null;
@@ -95,28 +88,24 @@ public class HoleController : MonoBehaviour
 
         Destroy(sw.gameObject);
 
-        float grow = growthPerObject * Mathf.Max(0.4f, sw.size);
-        transform.localScale += new Vector3(grow, grow, 0f);
-    }
-
-
-    void OnTriggerStay2D(Collider2D other)
-    {
-        var sw = other.GetComponent<Swallowable>();
-        if (sw == null || sw.IsBeingSwallowed) return;
-
-        float holeR = CurrentHoleRadius();
-        if (holeR >= swallowFactor * sw.size)
+        // ספר בליעה, ו-LevelUp בתדירות שבחרת
+        _swallowedSinceLevelUp++;
+        if (_swallowedSinceLevelUp >= Mathf.Max(1, eatsPerLevel))
         {
-            // Pull gently toward center while inside trigger,
-            // so it won't get stuck on edges even before the coroutine starts.
-            Vector3 dir = (transform.position - sw.transform.position);
-            float pull = 6f; // mild pull strength
-            sw.transform.position += dir.normalized * pull * Time.deltaTime;
-
-            // Kick off swallow once it's pretty close to center
-            if (dir.sqrMagnitude < 0.25f) StartCoroutine(SwallowRoutine(sw));
+            _swallowedSinceLevelUp = 0;
+            LevelUp();
         }
     }
 
+    void LevelUp()
+    {
+        holeLevel = Mathf.Min(holeLevel + 1, 7);
+        float k = 1f + Mathf.Max(0f, growthPerLevel); // e.g. 0.12 => +12%
+        transform.localScale = new Vector3(
+            transform.localScale.x * k,
+            transform.localScale.y * k,
+            transform.localScale.z
+        );
+        // הקוליידר יתעדכן אוטומטית עם הסקייל (Circle/Polygon וכו').
+    }
 }

@@ -3,8 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Swallowable : MonoBehaviour
 {
-    [Tooltip("Approximate size of the object (radius-equivalent) used for swallow eligibility.")]
-    public float size = 1f;
+    [Tooltip("Hole may swallow me if its level >= this.")]
+    [Range(1,7)] public int requiredLevel = 1;
 
     [HideInInspector] public bool IsBeingSwallowed = false;
 
@@ -15,7 +15,7 @@ public class Swallowable : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
-        // Ensure collider is not trigger; we want hole's trigger to detect us.
+        // ה־Hole הוא ה־Trigger; האובייקט עצמו לא-Trigger.
         if (col != null) col.isTrigger = false;
     }
 }
