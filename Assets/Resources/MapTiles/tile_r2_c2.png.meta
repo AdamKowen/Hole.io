@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-guid: 1ba8e191de0145b4092d54c819f7230c
+guid: 4689728421b1e40e58f433714cc08f62
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -614743094889025203
-    second: male1_0
-  - first:
-      213: 8000514687280187706
-    second: male1_1
-  - first:
-      213: -1320417575741340536
-    second: male1_2
-  - first:
-      213: 1408868353326115121
-    second: male1_3
+      213: -7712015678183304834
+    second: tile_r2_c2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -60,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 512
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -81,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -105,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: male1_0
+      name: tile_r2_c2_0
       rect:
         serializedVersion: 2
-        x: 12
-        y: 18
-        width: 42
-        height: 87
+        x: 0
+        y: 0
+        width: 2048
+        height: 2048
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,74 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d41f309896ef777f0800000000000000
-      internalID: -614743094889025203
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: male1_1
-      rect:
-        serializedVersion: 2
-        x: 102
-        y: 19
-        width: 39
-        height: 83
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a3981a338b9870f60800000000000000
-      internalID: 8000514687280187706
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: male1_2
-      rect:
-        serializedVersion: 2
-        x: 204
-        y: 17
-        width: 34
-        height: 88
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 88441c2f53fecade0800000000000000
-      internalID: -1320417575741340536
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: male1_3
-      rect:
-        serializedVersion: 2
-        x: 292
-        y: 19
-        width: 48
-        height: 88
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 139ea478d4e4d8310800000000000000
-      internalID: 1408868353326115121
+      spriteID: e7114a7c99a69f490800000000000000
+      internalID: -7712015678183304834
       vertices: []
       indices: 
       edges: []
@@ -210,10 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      male1_0: -614743094889025203
-      male1_1: 8000514687280187706
-      male1_2: -1320417575741340536
-      male1_3: 1408868353326115121
+      tile_r2_c2_0: -7712015678183304834
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

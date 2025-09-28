@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 7300219e46ae54a018f0d788a7588d12
+guid: d5a9f0583c8e245f3affe40df43e7f1d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7955819631750886615
-    second: hole_0
+      213: 6146569098171900311
+    second: tile_r4_c6_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1000
+  spritePixelsToUnits: 512
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: hole_0
+      name: tile_r4_c6_0
       rect:
         serializedVersion: 2
-        x: 70
-        y: 610
-        width: 1908
-        height: 828
+        x: 0
+        y: 0
+        width: 2048
+        height: 246
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 92bc8685230479190800000000000000
-      internalID: -7955819631750886615
+      spriteID: 791ede367000d4550800000000000000
+      internalID: 6146569098171900311
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      hole_0: -7955819631750886615
+      tile_r4_c6_0: 6146569098171900311
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
