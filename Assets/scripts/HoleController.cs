@@ -6,14 +6,11 @@ using System.Collections.Generic; // keeping track of who we faded
 public class HoleController : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed = 6f;
+    public float moveSpeed = 3f;
 
     [Header("Levels (simple)")]
     [Tooltip("Current hole level (1..7).")]
     [Range(1,7)] public int holeLevel = 1;
-
-    [Tooltip("How many swallows before we grow once.")]
-    public int eatsPerLevel = 1;
 
     [Tooltip("How much to grow (scale multiplier) on each level-up. 0.12 = +12%.")]
     public float growthPerLevel = 0.12f;
@@ -26,12 +23,17 @@ public class HoleController : MonoBehaviour
     [Tooltip("Opacity for targets we’re touching but can’t swallow yet.")]
     [Range(0f,1f)] public float blockedOpacity = 0.5f;
 
+    [Header("Scoring")]
+    public LevelPointsTable pointsTable;
+
     Rigidbody2D _rb;
     Vector2 _input;
     Collider2D _triggerCol;
-    int _swallowedSinceLevelUp = 0;
 
-    // Who’s currently faded (so we can bring them back on exit)
+    // Points accumulated since last level-up (level up every +10 points)
+    int _pointsSinceLevelUp = 0;
+
+    // Who's currently faded (so we can bring them back on exit)
     readonly HashSet<Swallowable> _faded = new HashSet<Swallowable>();
 
     void Awake()
@@ -39,17 +41,14 @@ public class HoleController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _triggerCol = GetComponent<Collider2D>();
 
-        // Top-down: no gravity, no rotation
         _rb.gravityScale = 0f;
         _rb.freezeRotation = true;
 
-        // The hole’s collider must be a Trigger
         if (_triggerCol != null) _triggerCol.isTrigger = true;
     }
 
     void Update()
     {
-        // Simple WASD/Arrows input
         _input.x = Input.GetAxisRaw("Horizontal");
         _input.y = Input.GetAxisRaw("Vertical");
         _input.Normalize();
@@ -57,7 +56,6 @@ public class HoleController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Smooth physics movement
         Vector2 targetPos = _rb.position + _input * moveSpeed * Time.fixedDeltaTime;
         _rb.MovePosition(targetPos);
     }
@@ -67,16 +65,15 @@ public class HoleController : MonoBehaviour
         var sw = GetSwallowableFromCollider(other);
         if (sw == null || sw.IsBeingSwallowed) return;
 
-        // Big enough? Eat. Otherwise, fade until we leave.
         if (holeLevel >= sw.requiredLevel)
         {
-            SetSpriteOpacity(sw, 1f); // make sure it’s not faded while eating
+            SetSpriteOpacity(sw, 1f);
             _faded.Remove(sw);
             StartCoroutine(SwallowRoutine(sw));
         }
         else
         {
-            SetSpriteOpacity(sw, blockedOpacity); // “too big” hint
+            SetSpriteOpacity(sw, blockedOpacity);
             _faded.Add(sw);
         }
     }
@@ -86,7 +83,6 @@ public class HoleController : MonoBehaviour
         var sw = GetSwallowableFromCollider(other);
         if (sw == null) return;
 
-        // No longer touching → put its opacity back
         if (_faded.Remove(sw))
             SetSpriteOpacity(sw, 1f);
     }
@@ -95,19 +91,16 @@ public class HoleController : MonoBehaviour
     {
         sw.IsBeingSwallowed = true;
 
-        // Full opacity during the swallow animation
         SetSpriteOpacity(sw, 1f);
         _faded.Remove(sw);
 
-        // Stop physics from fighting the animation
         if (sw.rb != null)
         {
-            sw.rb.linearVelocity = Vector2.zero;      
+            sw.rb.linearVelocity = Vector2.zero;
             sw.rb.bodyType = RigidbodyType2D.Kinematic;
         }
         if (sw.col != null) sw.col.enabled = false;
 
-        // Pull to center + shrink
         Vector3 startPos   = sw.transform.position;
         Vector3 endPos     = transform.position;
         Vector3 startScale = sw.transform.localScale;
@@ -117,19 +110,25 @@ public class HoleController : MonoBehaviour
         while (t < 1f)
         {
             t += Time.deltaTime / dur;
-            float k = t * t; // easy ease-in
+            float k = t * t;
             sw.transform.position = Vector3.Lerp(startPos, endPos, k);
             sw.transform.localScale = Vector3.Lerp(startScale, Vector3.zero, k);
             yield return null;
         }
 
+        int awardedPoints = 0;
+        if (ScoreManager.Instance != null && pointsTable != null)
+        {
+            awardedPoints = pointsTable.GetPoints(sw.requiredLevel);
+            ScoreManager.Instance.AddPoints(awardedPoints);
+        }
+
         Destroy(sw.gameObject);
 
-        // Track progress and maybe level up
-        _swallowedSinceLevelUp++;
-        if (_swallowedSinceLevelUp >= Mathf.Max(1, eatsPerLevel))
+        _pointsSinceLevelUp += awardedPoints;
+        while (_pointsSinceLevelUp >= 10)
         {
-            _swallowedSinceLevelUp = 0;
+            _pointsSinceLevelUp -= 10;
             LevelUp();
         }
     }
@@ -138,17 +137,14 @@ public class HoleController : MonoBehaviour
     {
         holeLevel = Mathf.Min(holeLevel + 1, 7);
 
-        // Grow the hole a bit each level (e.g., +12%)
         float k = 1f + Mathf.Max(0f, growthPerLevel);
         transform.localScale = new Vector3(
             transform.localScale.x * k,
             transform.localScale.y * k,
             transform.localScale.z
         );
-        // The collider scales with the transform automatically.
     }
 
-    // Works even if the collider we hit is on a child
     static Swallowable GetSwallowableFromCollider(Collider2D col) =>
         col.GetComponentInParent<Swallowable>();
 
