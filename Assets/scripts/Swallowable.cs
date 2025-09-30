@@ -15,7 +15,7 @@ public class Swallowable : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
-        // ה־Hole הוא ה־Trigger; האובייקט עצמו לא-Trigger.
-        if (col != null) col.isTrigger = false;
+        if (col != null)
+            col.isTrigger = false;
     }
 }
