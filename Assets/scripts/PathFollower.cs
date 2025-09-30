@@ -2,57 +2,72 @@ using UnityEngine;
 
 public class PathFollower : MonoBehaviour
 {
-    [Tooltip("The path this car will follow (Prefab Instance)")]
-    public Transform pathParent;   // Drag the Path prefab instance here
+    [Tooltip("The path this object will follow (Prefab Instance)")]
+    public Transform pathParent;      // Drag the Path prefab instance here
     public float speed = 3f;
+    public float arriveThreshold = 0.05f;
 
     private Transform[] waypoints;
-    private int currentIndex = 0;
-    private bool reachedEnd = false;
+    private int index = 0;            // current waypoint
+    private int dir = 1;              // +1 forward, -1 backward
 
     void Start()
     {
-        if (pathParent == null)
+        if (!pathParent)
         {
             Debug.LogError("Path Parent not assigned!");
+            enabled = false;
             return;
         }
 
-        // Collect all children of the path as waypoints
         int count = pathParent.childCount;
-        waypoints = new Transform[count];
-        for (int i = 0; i < count; i++)
+        if (count == 0)
         {
-            waypoints[i] = pathParent.GetChild(i);
+            Debug.LogError("Path has no children/waypoints!");
+            enabled = false;
+            return;
         }
 
-        // Start from the first waypoint
+        waypoints = new Transform[count];
+        for (int i = 0; i < count; i++)
+            waypoints[i] = pathParent.GetChild(i);
+
+        // start at first point
         transform.position = waypoints[0].position;
+
+        // if only one point, nothing to do
+        if (waypoints.Length == 1) enabled = false;
     }
 
     void Update()
     {
-        if (waypoints == null || waypoints.Length == 0 || reachedEnd) return;
+        if (waypoints == null || waypoints.Length < 2) return;
 
-        Transform target = waypoints[currentIndex];
+        Transform target = waypoints[index];
 
-        // Move towards the target waypoint
+        // move toward current target
         transform.position = Vector2.MoveTowards(
             transform.position,
             target.position,
             speed * Time.deltaTime
         );
 
-        // Check if reached target
-        if (Vector2.Distance(transform.position, target.position) < 0.05f)
+        // arrived?
+        if (Vector2.Distance(transform.position, target.position) <= arriveThreshold)
         {
-            if (currentIndex < waypoints.Length - 1)
+            // advance along current direction
+            index += dir;
+
+            // if we hit an end, flip direction and step to the next valid point
+            if (index >= waypoints.Length)
             {
-                currentIndex++;
+                dir = -1;
+                index = waypoints.Length - 2; // bounce to previous
             }
-            else
+            else if (index < 0)
             {
-                reachedEnd = true; // Stop at the last point
+                dir = 1;
+                index = 1; // bounce to next
             }
         }
     }
