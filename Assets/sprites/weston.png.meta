@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6b8cc30e1f4ab477ab8c98e1fdc887cc
+guid: 9bffe390d254e42bd8f64501c8361708
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2685649063692069786
-    second: weston_0
+      213: -763606274060388088
+    second: weston 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,12 +113,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: weston_0
+      name: weston 1_0
       rect:
         serializedVersion: 2
-        x: 23
+        x: 19
         y: 0
-        width: 999
+        width: 1003
         height: 1019
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a9be9b02897554520800000000000000
-      internalID: 2685649063692069786
+      spriteID: 809fe56b3202765f0800000000000000
+      internalID: -763606274060388088
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      weston_0: 2685649063692069786
+      weston 1_0: -763606274060388088
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

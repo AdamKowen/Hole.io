@@ -16,6 +16,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
 
+        // Limit frame rate to avoid GPU overheating
+        Application.targetFrameRate = 60;
+
+        // Ensure VSync is enabled (1 = sync every frame)
+        QualitySettings.vSyncCount = 1;
+        
         if (showMenuOnStart) EnterMenu(true);
         else StartGame();
     }

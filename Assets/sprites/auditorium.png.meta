@@ -116,10 +116,10 @@ TextureImporter:
       name: auditorium_0
       rect:
         serializedVersion: 2
-        x: 31
-        y: 57
-        width: 969
-        height: 904
+        x: 0
+        y: 11
+        width: 1016
+        height: 1008
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
