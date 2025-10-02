@@ -20,8 +20,18 @@ public class CameraFollowZoom2D : MonoBehaviour
     public bool menuMode = false;
     public float menuOrthoSize = 12f;
     public float menuZoomSmoothTime = 0.35f;
+    
+    [Header("Zoom Limits")]
+    public bool limitZoom = true;
+    public float minOrthoSize = 2.0f;  
+    public float maxOrthoSize = 12.0f;  
 
-    // NEW: don't move at all while menu is up
+    [Header("Manual Lock (optional)")]
+    public bool lockZoom = false;       
+    public float lockedSize = 10f;       
+
+
+    // don't move at all while menu is up
     public bool freezePositionInMenu = true;
 
     private Camera _cam;
@@ -36,6 +46,14 @@ public class CameraFollowZoom2D : MonoBehaviour
 
         // Decide desired size for this frame
         float desiredSize = menuMode ? menuOrthoSize : GetDesiredSizeByTarget(target);
+
+        // NEW: allow locking zoom entirely (you decide when to stop)
+        if (lockZoom)
+            desiredSize = lockedSize;
+
+        // NEW: clamp zoom range
+        if (limitZoom)
+            desiredSize = Mathf.Clamp(desiredSize, minOrthoSize, maxOrthoSize);
 
         // If menu is up and we freeze position — skip all follow/clamp logic.
         if (!(menuMode && freezePositionInMenu))
@@ -64,8 +82,11 @@ public class CameraFollowZoom2D : MonoBehaviour
             ref _zoomVel,
             menuMode ? menuZoomSmoothTime : zoomSmoothTime
         );
+
+        // never go below epsilon
         _cam.orthographicSize = Mathf.Max(0.01f, nextSize);
     }
+
 
     private float GetDesiredSizeByTarget(Transform t)
     {

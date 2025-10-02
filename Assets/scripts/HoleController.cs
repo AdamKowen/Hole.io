@@ -7,6 +7,11 @@ public class HoleController : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed = 3f;
+    
+    [Header("Movement Bounds")]
+    public SpriteRenderer movementBounds;
+    [Tooltip("Extra padding from the bounds (world units).")]
+    public float boundsPadding = 0f;
 
     [Header("Levels (simple)")]
     [Tooltip("Current hole level (1..7).")]
@@ -57,8 +62,29 @@ public class HoleController : MonoBehaviour
     void FixedUpdate()
     {
         Vector2 targetPos = _rb.position + _input * moveSpeed * Time.fixedDeltaTime;
+
+        // NEW: clamp to movementBounds so the hole gets "stuck" at the edge
+        if (movementBounds != null)
+        {
+            Bounds b = movementBounds.bounds;
+            Vector2 half = GetHalfSizeWorld() + Vector2.one * boundsPadding;
+
+            float minX = b.min.x + half.x;
+            float maxX = b.max.x - half.x;
+            float minY = b.min.y + half.y;
+            float maxY = b.max.y - half.y;
+
+            // In case the hole becomes larger than the bounds in any axis
+            if (minX > maxX) { float midX = (b.min.x + b.max.x) * 0.5f; minX = maxX = midX; }
+            if (minY > maxY) { float midY = (b.min.y + b.max.y) * 0.5f; minY = maxY = midY; }
+
+            targetPos.x = Mathf.Clamp(targetPos.x, minX, maxX);
+            targetPos.y = Mathf.Clamp(targetPos.y, minY, maxY);
+        }
+
         _rb.MovePosition(targetPos);
     }
+
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -156,5 +182,13 @@ public class HoleController : MonoBehaviour
         var c = sr.color;
         c.a = Mathf.Clamp01(a);
         sr.color = c;
+    }
+    
+    // Helper to get half-size of the hole in world units (uses collider bounds)
+    Vector2 GetHalfSizeWorld()
+    {
+        if (_triggerCol == null) return Vector2.zero;
+        var e = _triggerCol.bounds.extents; // world-space half-size
+        return new Vector2(e.x, e.y);
     }
 }
