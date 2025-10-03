@@ -7,9 +7,17 @@ public class PathFollower : MonoBehaviour
     public float speed = 3f;
     public float arriveThreshold = 0.05f;
 
+    [Header("Visual")]
+    [Tooltip("Flip horizontally when moving backward (mirror on vertical axis).")]
+    public bool flipOnBacktrack = true;
+
     private Transform[] waypoints;
     private int index = 0;            // current waypoint
     private int dir = 1;              // +1 forward, -1 backward
+
+    // For flipping
+    SpriteRenderer _sr;
+    Vector3 _baseScale;
 
     void Start()
     {
@@ -34,6 +42,12 @@ public class PathFollower : MonoBehaviour
 
         // start at first point
         transform.position = waypoints[0].position;
+
+        // cache visual refs
+        _sr = GetComponentInChildren<SpriteRenderer>();
+        _baseScale = transform.localScale;
+
+        ApplyFacing(dir);
 
         // if only one point, nothing to do
         if (waypoints.Length == 1) enabled = false;
@@ -63,12 +77,33 @@ public class PathFollower : MonoBehaviour
             {
                 dir = -1;
                 index = waypoints.Length - 2; // bounce to previous
+                ApplyFacing(dir); // flipped: now moving backward
             }
             else if (index < 0)
             {
                 dir = 1;
                 index = 1; // bounce to next
+                ApplyFacing(dir); // unflip: now moving forward
             }
+        }
+    }
+
+    void ApplyFacing(int direction)
+    {
+        if (!flipOnBacktrack) return;
+
+        // direction: +1 forward (no mirror), -1 backward (mirror on vertical axis)
+        if (_sr != null)
+        {
+            // flip sprite horizontally when going backward
+            _sr.flipX = (direction == -1);
+        }
+        else
+        {
+            // fallback: mirror by scale X
+            var s = _baseScale;
+            s.x = Mathf.Abs(s.x) * (direction == -1 ? -1f : 1f);
+            transform.localScale = s;
         }
     }
 }
