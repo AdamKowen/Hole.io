@@ -30,6 +30,10 @@ public class HoleController : MonoBehaviour
 
     [Header("Scoring")]
     public LevelPointsTable pointsTable;
+    
+    [Header("Progression")]
+    public int maxLevel = 7;
+    public int[] nextLevelCostByLevel = new int[] { 0, 10, 15, 20, 25, 35, 50 };
 
     Rigidbody2D _rb;
     Vector2 _input;
@@ -152,17 +156,33 @@ public class HoleController : MonoBehaviour
         Destroy(sw.gameObject);
 
         _pointsSinceLevelUp += awardedPoints;
-        while (_pointsSinceLevelUp >= 10)
+        TryLevelUps();
+    }
+
+    
+    void TryLevelUps()
+    {
+        while (holeLevel < maxLevel)
         {
-            _pointsSinceLevelUp -= 10;
+            int cost = GetCostForLevel(holeLevel);
+            if (_pointsSinceLevelUp < cost) break;
+            _pointsSinceLevelUp -= cost;
             LevelUp();
         }
     }
 
+    int GetCostForLevel(int lvl)
+    {
+        if (nextLevelCostByLevel == null || lvl <= 0 || lvl >= nextLevelCostByLevel.Length)
+            return 10; // fallback
+        return Mathf.Max(1, nextLevelCostByLevel[lvl]);
+    }
+
+    
+    
     void LevelUp()
     {
-        holeLevel = Mathf.Min(holeLevel + 1, 7);
-
+        holeLevel = Mathf.Min(holeLevel + 1, maxLevel);
         float k = 1f + Mathf.Max(0f, growthPerLevel);
         transform.localScale = new Vector3(
             transform.localScale.x * k,
@@ -170,6 +190,7 @@ public class HoleController : MonoBehaviour
             transform.localScale.z
         );
     }
+
 
     static Swallowable GetSwallowableFromCollider(Collider2D col) =>
         col.GetComponentInParent<Swallowable>();
