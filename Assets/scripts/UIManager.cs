@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
         gameRunning = false;
 
         // NEW: hard-freeze the hole so player can't move post-GameOver
-        var gm = FindObjectOfType<GameManager>();
+        var gm = UnityEngine.Object.FindAnyObjectByType<GameManager>();
         if (gm && gm.hole)
         {
             gm.hole.Freeze(true);
