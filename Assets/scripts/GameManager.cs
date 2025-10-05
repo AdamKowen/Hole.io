@@ -13,18 +13,25 @@ public class GameManager : MonoBehaviour
     public float menuOrthoSize = 12f;
     public bool showMenuOnStart = true;
 
-    private void Start()
+    void Start()
     {
-
-        // Limit frame rate to avoid GPU overheating
         Application.targetFrameRate = 120;
-
-        // Ensure VSync is enabled (1 = sync every frame)
         QualitySettings.vSyncCount = 1;
-        
-        if (showMenuOnStart) EnterMenu(true);
-        else StartGame();
+
+        bool skipMenu = PlayerPrefs.GetInt("SkipMenuOnce", 0) == 1;
+        if (skipMenu)
+        {
+            PlayerPrefs.SetInt("SkipMenuOnce", 0); // consume flag
+            PlayerPrefs.Save();
+            StartGame();                 // ⬅️ בריפוליי: התחל ישר, בלי מסך פתיחה
+        }
+        else
+        {
+            if (showMenuOnStart) EnterMenu(true);  // ⬅️ בריצה ראשונה: הצג "שחק"
+            else StartGame();
+        }
     }
+
 
     // Hook this to the Button's OnClick
     public void OnPlayButton()
@@ -50,15 +57,27 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         if (playCanvas) playCanvas.SetActive(false);
-
-        if (hole) hole.enabled = true;
-
+        if (hole)
+        {
+            hole.Freeze(false);   // ⬅️ לוודא שהשחקן משוחרר בתחילת משחק
+            hole.enabled = true;
+        }
         if (camCtrl) camCtrl.ExitMenuMode();
+
+        if (UIManager.Instance)
+            UIManager.Instance.StartGame();
     }
 
-    // Call this when you implement "game over" later
+
+
     public void GameOver()
     {
-        EnterMenu(false);
+        if (hole)
+        {
+            hole.Freeze(true);    // ⬅️ קפיאה ודאית
+            hole.enabled = false;
+        }
+        if (UIManager.Instance)
+            UIManager.Instance.EndGame();
     }
 }

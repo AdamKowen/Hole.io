@@ -34,6 +34,15 @@ public class HoleController : MonoBehaviour
     [Header("Progression")]
     public int maxLevel = 7;
     public int[] nextLevelCostByLevel = new int[] { 0, 10, 15, 20, 25, 35, 50 };
+    
+    
+    [Header("Floating Score")]
+    public ObjectPool floatingTextPool;
+    public Vector3 floatingTextOffset = new Vector3(0f, 0.25f, 0f);
+    
+    
+    [Header("Control")]
+    public bool isFrozen = false;
 
     Rigidbody2D _rb;
     Vector2 _input;
@@ -58,6 +67,7 @@ public class HoleController : MonoBehaviour
 
     void Update()
     {
+        if (isFrozen) return;
         _input.x = Input.GetAxisRaw("Horizontal");
         _input.y = Input.GetAxisRaw("Vertical");
         _input.Normalize();
@@ -65,6 +75,7 @@ public class HoleController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isFrozen) return;
         Vector2 targetPos = _rb.position + _input * moveSpeed * Time.fixedDeltaTime;
 
         // NEW: clamp to movementBounds so the hole gets "stuck" at the edge
@@ -151,6 +162,7 @@ public class HoleController : MonoBehaviour
         {
             awardedPoints = pointsTable.GetPoints(sw.requiredLevel);
             ScoreManager.Instance.AddPoints(awardedPoints);
+            SpawnFloatingScore(awardedPoints);
         }
 
         Destroy(sw.gameObject);
@@ -212,4 +224,43 @@ public class HoleController : MonoBehaviour
         var e = _triggerCol.bounds.extents; // world-space half-size
         return new Vector2(e.x, e.y);
     }
+    
+    
+    void SpawnFloatingScore(int awardedPoints)
+    {
+        if (!floatingTextPool) return;
+
+        Vector3 spawnPos = transform.position + floatingTextOffset;
+        var go = floatingTextPool.Spawn(spawnPos, Quaternion.identity);
+        if (!go) return;
+
+        var ft = go.GetComponent<FloatingText>();
+        if (ft && ft.tmp != null)
+        {
+            // Font size relative to hole, but clamped to a max
+            float baseFont = 20f;
+            float scaleFactor = Mathf.Clamp(transform.localScale.x, 0.5f, 3f); // limit growth
+            ft.tmp.fontSize = baseFont * scaleFactor;
+
+            // Adjust RectTransform to fit new font size (prevent line breaks)
+            RectTransform rect = ft.tmp.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(ft.tmp.fontSize * 2f, ft.tmp.fontSize * 1.2f);
+
+            // Pass hole transform to make text follow it slightly
+            ft.Play("+" + awardedPoints.ToString(), spawnPos, floatingTextPool, transform);
+        }
+        
+    }
+
+    
+    public void Freeze(bool value)
+    {
+        isFrozen = value;
+
+        // kill any residual input / velocity immediately
+        _input = Vector2.zero;
+        if (_rb) _rb.linearVelocity = Vector2.zero;
+    }
+
+
 }

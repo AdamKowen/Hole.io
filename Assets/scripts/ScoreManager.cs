@@ -15,6 +15,12 @@ public class ScoreManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
+    
+    void Start()
+    {
+        if (UIManager.Instance)
+            OnScoreChanged += UIManager.Instance.UpdateScore;
+    }
 
     public void AddPoints(int amount)
     {
