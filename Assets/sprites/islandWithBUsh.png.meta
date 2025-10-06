@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 01590cd99c9684c98859e193ddaa4783
+guid: d319dfd763474432b8738607b0ac2264
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8291482081919921640
-    second: weston better trees_0
+      213: -4565684731462376819
+    second: ChatGPT Image Oct 6, 2025 at 12_46_29 PM_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: weston better trees_0
+      name: ChatGPT Image Oct 6, 2025 at 12_46_29 PM_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1022
-        height: 1019
+        width: 1024
+        height: 1023
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 81295a50afcbeec80800000000000000
-      internalID: -8291482081919921640
+      spriteID: d82a2c04ded63a0c0800000000000000
+      internalID: -4565684731462376819
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      weston better trees_0: -8291482081919921640
+      ChatGPT Image Oct 6, 2025 at 12_46_29 PM_0: -4565684731462376819
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
