@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe8997e5b53b4afcb9555b89339d4d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredLevel: 1
+  requiredLevel: 3
   IsBeingSwallowed: 0
   rb: {fileID: 0}
   col: {fileID: 0}

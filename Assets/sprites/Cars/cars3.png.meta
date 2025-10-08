@@ -99,6 +99,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -155,7 +168,7 @@ TextureImporter:
         width: 532
         height: 344
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -164,6 +177,28 @@ TextureImporter:
       bones: []
       spriteID: 1876d6690b36fe641ba8ff853219b666
       internalID: 1019401899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cars3_3
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 26
+        width: 414
+        height: 307
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b14bd0e431564421ba56848e43a107af
+      internalID: 1489221183
       vertices: []
       indices: 
       edges: []
@@ -185,6 +220,7 @@ TextureImporter:
       cars3_0: -2768106201937648732
       cars3_1: -6886414483674287655
       cars3_2: 1019401899
+      cars3_3: 1489221183
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
