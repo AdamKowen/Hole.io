@@ -6,43 +6,43 @@ using System.Collections.Generic; // keeping track of who we faded
 public class HoleController : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed = 3f;
+    [SerializeField] private float moveSpeed = 3f;
     
     [Header("Movement Bounds")]
-    public SpriteRenderer movementBounds;
+    [SerializeField] private SpriteRenderer movementBounds;
     [Tooltip("Extra padding from the bounds (world units).")]
-    public float boundsPadding = 0f;
+    [SerializeField] private float boundsPadding = 0f;
 
     [Header("Levels (simple)")]
     [Tooltip("Current hole level (1..7).")]
-    [Range(1,7)] public int holeLevel = 1;
+    [SerializeField, Range(1,7)] private int holeLevel = 1;
 
     [Tooltip("How much to grow (scale multiplier) on each level-up. 0.12 = +12%.")]
-    public float growthPerLevel = 0.12f;
+    [SerializeField] private float growthPerLevel = 0.12f;
 
     [Header("Swallowing FX")]
     [Tooltip("Seconds for the swallow animation.")]
-    public float swallowDuration = 0.35f;
+    [SerializeField] private float swallowDuration = 0.35f;
 
     [Header("Blocked Visual (targets)")]
     [Tooltip("Opacity for targets we’re touching but can’t swallow yet.")]
-    [Range(0f,1f)] public float blockedOpacity = 0.5f;
+    [SerializeField, Range(0f,1f)] private float blockedOpacity = 0.5f;
 
     [Header("Scoring")]
-    public LevelPointsTable pointsTable;
+    [SerializeField] private LevelPointsTable pointsTable;
     
     [Header("Progression")]
-    public int maxLevel = 7;
-    public int[] nextLevelCostByLevel = new int[] { 0, 10, 15, 20, 25, 35, 50 };
+    [SerializeField] private int maxLevel = 7;
+    [SerializeField] private int[] nextLevelCostByLevel = new int[] { 0, 10, 15, 20, 25, 35, 50 };
     
     
     [Header("Floating Score")]
-    public ObjectPool floatingTextPool;
-    public Vector3 floatingTextOffset = new Vector3(0f, 0.25f, 0f);
+    [SerializeField] private ObjectPool floatingTextPool;
+    [SerializeField] private Vector3 floatingTextOffset = new Vector3(0f, 0.25f, 0f);
     
     
     [Header("Control")]
-    public bool isFrozen = false;
+    [SerializeField] private bool isFrozen = false;
 
     Rigidbody2D _rb;
     Vector2 _input;
@@ -106,7 +106,7 @@ public class HoleController : MonoBehaviour
         var sw = GetSwallowableFromCollider(other);
         if (sw == null || sw.IsBeingSwallowed) return;
 
-        if (holeLevel >= sw.requiredLevel)
+    if (holeLevel >= sw.RequiredLevel)
         {
             SetSpriteOpacity(sw, 1f);
             _faded.Remove(sw);
@@ -160,7 +160,7 @@ public class HoleController : MonoBehaviour
         int awardedPoints = 0;
         if (ScoreManager.Instance != null && pointsTable != null)
         {
-            awardedPoints = pointsTable.GetPoints(sw.requiredLevel);
+            awardedPoints = pointsTable.GetPoints(sw.RequiredLevel);
             ScoreManager.Instance.AddPoints(awardedPoints);
             SpawnFloatingScore(awardedPoints);
         }
@@ -235,16 +235,16 @@ public class HoleController : MonoBehaviour
         if (!go) return;
 
         var ft = go.GetComponent<FloatingText>();
-        if (ft && ft.tmp != null)
+        if (ft && ft.Tmp != null)
         {
             // Font size relative to hole, but clamped to a max
             float baseFont = 20f;
             float scaleFactor = Mathf.Clamp(transform.localScale.x, 0.5f, 3f); // limit growth
-            ft.tmp.fontSize = baseFont * scaleFactor;
+            ft.Tmp.fontSize = baseFont * scaleFactor;
 
             // Adjust RectTransform to fit new font size (prevent line breaks)
-            RectTransform rect = ft.tmp.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(ft.tmp.fontSize * 2f, ft.tmp.fontSize * 1.2f);
+            RectTransform rect = ft.Tmp.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(ft.Tmp.fontSize * 2f, ft.Tmp.fontSize * 1.2f);
 
             // Pass hole transform to make text follow it slightly
             ft.Play("+" + awardedPoints.ToString(), spawnPos, floatingTextPool, transform);

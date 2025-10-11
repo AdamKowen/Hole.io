@@ -4,7 +4,7 @@ using UnityEngine;
 public class LevelPointsTable : ScriptableObject
 {
     [Tooltip("pointsByLevel[1] -> level 1 points, pointsByLevel[0] is unused.")]
-    public int[] pointsByLevel = new int[] { 0, 1, 3, 5, 7, 10, 15 };
+    [SerializeField] private int[] pointsByLevel = new int[] { 0, 1, 3, 5, 7, 10, 15 };
 
     public int GetPoints(int level)
     {

@@ -4,7 +4,9 @@ using UnityEngine;
 public class Swallowable : MonoBehaviour
 {
     [Tooltip("Hole may swallow me if its level >= this.")]
-    [Range(1,7)] public int requiredLevel = 1;
+        [SerializeField, Range(1,7)] private int requiredLevel = 1;
+
+        public int RequiredLevel => requiredLevel;
 
     [HideInInspector] public bool IsBeingSwallowed = false;
 

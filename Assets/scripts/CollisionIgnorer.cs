@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CollisionIgnorer : MonoBehaviour
 {
-    public Collider2D[] colliders; 
+    [SerializeField] private Collider2D[] colliders; 
 
     void Start()
     {

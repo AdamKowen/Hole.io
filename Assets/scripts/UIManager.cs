@@ -2,26 +2,18 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    public static UIManager Instance { get; private set; }
-
     [Header("UI References")]
-    public TMP_Text scoreText;
-    public TMP_Text timerText;
-    public GameObject gameOverPanel;
-    public TMP_Text[] highScoreTexts;
+    [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private TMP_Text timerText;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private TMP_Text[] highScoreTexts;
 
     [Header("Timer Settings")]
-    public float startTime = 90f;  // you can change in Inspector
+    [SerializeField] private float startTime = 90f;  // you can change in Inspector
     private float remainingTime;
     private bool gameRunning = false;
-
-    void Awake()
-    {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-        Instance = this;
-    }
 
     void Start()
     {
@@ -70,10 +62,10 @@ public class UIManager : MonoBehaviour
 
         // NEW: hard-freeze the hole so player can't move post-GameOver
         var gm = UnityEngine.Object.FindAnyObjectByType<GameManager>();
-        if (gm && gm.hole)
-        {
-            gm.hole.Freeze(true);
-            gm.hole.enabled = false;
+            if (gm && gm.Hole)
+            {
+                gm.Hole.Freeze(true);
+                gm.Hole.enabled = false;
         }
 
         gameOverPanel.SetActive(true);
