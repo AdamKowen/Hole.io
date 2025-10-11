@@ -116,8 +116,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmp: {fileID: 8830257706261382877}
-  riseDistance: 0.3
-  duration: 1
+  riseDistance: 1
+  duration: 3
   followTarget: {fileID: 0}
   followOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &8892279030947823039

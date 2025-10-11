@@ -76,10 +76,10 @@ public class HoleController : MonoBehaviour
     void FixedUpdate()
     {
         if (isFrozen) return;
-        Vector2 targetPos = _rb.position + _input * moveSpeed * Time.fixedDeltaTime;
+        Vector2 targetPos = _rb.position + _input * (moveSpeed * Time.fixedDeltaTime);
 
         // NEW: clamp to movementBounds so the hole gets "stuck" at the edge
-        if (movementBounds != null)
+        if (movementBounds)
         {
             Bounds b = movementBounds.bounds;
             Vector2 half = GetHalfSizeWorld() + Vector2.one * boundsPadding;
@@ -135,12 +135,12 @@ public class HoleController : MonoBehaviour
         SetSpriteOpacity(sw, 1f);
         _faded.Remove(sw);
 
-        if (sw.rb != null)
+        if (sw.rb)
         {
             sw.rb.linearVelocity = Vector2.zero;
             sw.rb.bodyType = RigidbodyType2D.Kinematic;
         }
-        if (sw.col != null) sw.col.enabled = false;
+        if (sw.col) sw.col.enabled = false;
 
         Vector3 startPos   = sw.transform.position;
         Vector3 endPos     = transform.position;
