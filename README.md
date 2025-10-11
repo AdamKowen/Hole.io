@@ -4,7 +4,7 @@
 
 ## 🎮 Overview
 
-A 2D Unity project inspired by Hole.io. The player controls a growing hole that moves through a recreated scene of The Academic College of Tel-Aviv-Yaffo, swallowing objects around the campus to increase size and score. The goal is to maximize points within a 3-minute session. The game includes a start menu, score tracking, growth system, and fully working object pooling for smooth performance.
+A 2D Unity project inspired by Hole.io. The player controls a growing hole that moves through a recreated scene of The Academic College of Tel-Aviv-Yaffo, swallowing objects around the campus to increase size and score. The goal is to maximize points within a 2-minute session. The game includes a start menu, score tracking, growth system, and fully working object pooling for smooth performance.
 **Gameplay Loop:**
 
 > Move → Swallow smaller objects → Earn points → Grow → Swallow larger objects → Repeat until timer ends.
