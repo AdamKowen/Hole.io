@@ -4,17 +4,17 @@ using System.Collections;
 public class PathLapSwitcher : MonoBehaviour
 {
     [Header("Path")]
-    public Transform pathParent;       // Path instance with child waypoints in order
-    public float speed = 3f;
-    public float arriveThreshold = 0.05f;
+    [SerializeField] private Transform pathParent;       // Path instance with child waypoints in order
+    [SerializeField] private float speed = 3f;
+    [SerializeField] private float arriveThreshold = 0.05f;
 
     [Header("Loop")]
-    public float dwellAtStart = 2f;    // Pause at waypoint 0 each lap
-    public bool snapOnLoop = true;     // Snap to first point on loop
+    [SerializeField] private float dwellAtStart = 2f;    // Pause at waypoint 0 each lap
+    [SerializeField] private bool snapOnLoop = true;     // Snap to first point on loop
 
     [Header("Sprites (optional; one change per lap)")]
-    public Sprite[] sprites;           // Cycle per lap (0,1,2,...,0)
-    public bool randomStartSprite = true;
+    [SerializeField] private Sprite[] sprites;           // Cycle per lap (0,1,2,...,0)
+    [SerializeField] private bool randomStartSprite = true;
 
     private Transform[] _wps;
     private int _i = 0;                // waypoint index

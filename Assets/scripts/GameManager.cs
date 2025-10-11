@@ -1,17 +1,19 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     [Header("UI")]
-    public GameObject playCanvas;
+    [SerializeField] private GameObject playCanvas;
 
     [Header("References")]
-    public HoleController hole;           // drag your hole object here
-    public CameraFollowZoom2D camCtrl;   // drag Main Camera with CameraFollowZoom2D
+    [SerializeField] private HoleController hole;           // drag your hole object here
+
+    public HoleController Hole => hole;
+    [SerializeField] private CameraFollowZoom2D camCtrl;   // drag Main Camera with CameraFollowZoom2D
 
     [Header("Menu Settings")]
-    public float menuOrthoSize = 12f;
-    public bool showMenuOnStart = true;
+    [SerializeField] private float menuOrthoSize = 12f;
+    [SerializeField] private bool showMenuOnStart = true;
 
     void Start()
     {
@@ -23,11 +25,11 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("SkipMenuOnce", 0); // consume flag
             PlayerPrefs.Save();
-            StartGame();                 // ⬅️ בריפוליי: התחל ישר, בלי מסך פתיחה
+            StartGame();                
         }
         else
         {
-            if (showMenuOnStart) EnterMenu(true);  // ⬅️ בריצה ראשונה: הצג "שחק"
+            if (showMenuOnStart) EnterMenu(true);  
             else StartGame();
         }
     }
@@ -59,7 +61,7 @@ public class GameManager : MonoBehaviour
         if (playCanvas) playCanvas.SetActive(false);
         if (hole)
         {
-            hole.Freeze(false);   // ⬅️ לוודא שהשחקן משוחרר בתחילת משחק
+            hole.Freeze(false);   
             hole.enabled = true;
         }
         if (camCtrl) camCtrl.ExitMenuMode();
@@ -74,7 +76,7 @@ public class GameManager : MonoBehaviour
     {
         if (hole)
         {
-            hole.Freeze(true);    // ⬅️ קפיאה ודאית
+            hole.Freeze(true);    
             hole.enabled = false;
         }
         if (UIManager.Instance)

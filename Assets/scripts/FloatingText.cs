@@ -4,13 +4,15 @@ using TMPro;
 public class FloatingText : MonoBehaviour
 {
     [Header("Refs")]
-    public TMP_Text tmp; // assigned in prefab
+    [SerializeField] private TMP_Text tmp; // assigned in prefab
+
+    public TMP_Text Tmp => tmp;
 
     [Header("Motion")]
-    public float riseDistance = 0.6f; 
-    public float duration = 0.6f;     
-    public Transform followTarget;    // optional (e.g., the hole transform)
-    public Vector3 followOffset;      // offset above target
+    [SerializeField] private float riseDistance = 0.6f; 
+    [SerializeField] private float duration = 0.6f;     
+    [SerializeField] private Transform followTarget;    // optional (e.g., the hole transform)
+    [SerializeField] private Vector3 followOffset;      // offset above target
 
     private Vector3 startPos;
     private Vector3 endPos;
@@ -22,7 +24,7 @@ public class FloatingText : MonoBehaviour
     public void Play(string text, Vector3 worldPos, ObjectPool ownerPool, Transform target = null)
     {
         pool = ownerPool;
-        tmp.text = text;
+        if (tmp != null) tmp.text = text;
         followTarget = target;
         followOffset = worldPos - (target ? target.position : Vector3.zero);
 
@@ -56,6 +58,7 @@ public class FloatingText : MonoBehaviour
 
     void SetAlpha(float a)
     {
+        if (tmp == null) return;
         var c = tmp.color;
         c.a = a;
         tmp.color = c;

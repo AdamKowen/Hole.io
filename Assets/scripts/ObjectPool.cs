@@ -4,11 +4,11 @@ using UnityEngine;
 public class ObjectPool : MonoBehaviour
 {
     [Header("Prefabs (pick randomly on create)")]
-    public List<GameObject> prefabs = new List<GameObject>();
+    [SerializeField] private List<GameObject> prefabs = new List<GameObject>();
 
     [Header("Pool Settings")]
-    public int initialSize = 16;
-    public bool expandable = true;
+    [SerializeField] private int initialSize = 16;
+    [SerializeField] private bool expandable = true;
 
     readonly Queue<GameObject> _q = new();
 

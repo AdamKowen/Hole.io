@@ -4,35 +4,35 @@ using UnityEngine;
 public class CameraFollowZoom2D : MonoBehaviour
 {
     [Header("Follow")]
-    public Transform target;
-    public Vector3 offset = new Vector3(0f, 0f, -10f);
-    public float followSmoothTime = 0.20f;
+    [SerializeField] private Transform target;
+    [SerializeField] private Vector3 offset = new Vector3(0f, 0f, -10f);
+    [SerializeField] private float followSmoothTime = 0.20f;
 
     [Header("Zoom")]
-    public float baseOrthoSize = 3.0f;
-    public float zoomPerUnitRadius = 1.5f;
-    public float zoomSmoothTime = 0.20f;
+    [SerializeField] private float baseOrthoSize = 3.0f;
+    [SerializeField] private float zoomPerUnitRadius = 1.5f;
+    [SerializeField] private float zoomSmoothTime = 0.20f;
 
     [Header("World Bounds (optional)")]
-    public SpriteRenderer worldBounds;
+    [SerializeField] private SpriteRenderer worldBounds;
 
     [Header("Menu/Intro")]
-    public bool menuMode = false;
-    public float menuOrthoSize = 12f;
-    public float menuZoomSmoothTime = 0.35f;
+    [SerializeField] private bool menuMode = false;
+    [SerializeField] private float menuOrthoSize = 12f;
+    [SerializeField] private float menuZoomSmoothTime = 0.35f;
     
     [Header("Zoom Limits")]
-    public bool limitZoom = true;
-    public float minOrthoSize = 2.0f;  
-    public float maxOrthoSize = 12.0f;  
+    [SerializeField] private bool limitZoom = true;
+    [SerializeField] private float minOrthoSize = 2.0f;  
+    [SerializeField] private float maxOrthoSize = 12.0f;  
 
     [Header("Manual Lock (optional)")]
-    public bool lockZoom = false;       
-    public float lockedSize = 10f;       
+    [SerializeField] private bool lockZoom = false;       
+    [SerializeField] private float lockedSize = 10f;       
 
 
     // don't move at all while menu is up
-    public bool freezePositionInMenu = true;
+    [SerializeField] private bool freezePositionInMenu = true;
 
     private Camera _cam;
     private Vector3 _vel;
@@ -42,7 +42,7 @@ public class CameraFollowZoom2D : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_cam == null) return;
+        if (_cam == null || target == null) return;
 
         // Decide desired size for this frame
         float desiredSize = menuMode ? menuOrthoSize : GetDesiredSizeByTarget(target);
@@ -58,7 +58,6 @@ public class CameraFollowZoom2D : MonoBehaviour
         // If menu is up and we freeze position — skip all follow/clamp logic.
         if (!(menuMode && freezePositionInMenu))
         {
-            if (target == null) return;
 
             Vector3 desiredPos = target.position + offset;
 

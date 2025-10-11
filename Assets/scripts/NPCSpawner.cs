@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class NPCSpawner : MonoBehaviour
 {
-    public ObjectPool pool;         
-    public float spawnInterval = 2f; 
-    public bool spawnOnStart = true; 
+    [SerializeField] private ObjectPool pool;         
+    [SerializeField] private float spawnInterval = 2f; 
+    [SerializeField] private bool spawnOnStart = true; 
 
     float _t;
 

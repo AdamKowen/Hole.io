@@ -3,13 +3,13 @@ using UnityEngine;
 public class PathFollower : MonoBehaviour
 {
     [Tooltip("The path this object will follow (Prefab Instance)")]
-    public Transform pathParent;      // Drag the Path prefab instance here
-    public float speed = 3f;
-    public float arriveThreshold = 0.05f;
+    [SerializeField] private Transform pathParent;      // Drag the Path prefab instance here
+    [SerializeField] private float speed = 3f;
+    [SerializeField] private float arriveThreshold = 0.05f;
 
     [Header("Visual")]
     [Tooltip("Flip horizontally when moving backward (mirror on vertical axis).")]
-    public bool flipOnBacktrack = true;
+    [SerializeField] private bool flipOnBacktrack = true;
 
     private Transform[] waypoints;
     private int index = 0;            // current waypoint

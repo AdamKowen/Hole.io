@@ -1,20 +1,10 @@
 using UnityEngine;
 using System;
 
-
-//we may want to display the score, Adam what do you think? 
-public class ScoreManager : MonoBehaviour
+public class ScoreManager : Singleton<ScoreManager>
 {
-    public static ScoreManager Instance { get; private set; }
     public event Action<int> OnScoreChanged;
     public int Score { get; private set; }
-
-    void Awake()
-    {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
     
     void Start()
     {

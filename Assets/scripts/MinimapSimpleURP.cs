@@ -6,7 +6,7 @@ public class MinimapSimpleURP : MonoBehaviour
 {
     [Header("Zoom (Orthographic Size)")]
     [Tooltip("Smaller = closer")]
-    public float zoom = 30f;
+    [SerializeField] private float zoom = 30f;
 
     Camera cam;
 
