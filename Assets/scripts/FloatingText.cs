@@ -42,19 +42,30 @@ public class FloatingText : MonoBehaviour
         t += Time.deltaTime;
         float normalized = Mathf.Clamp01(t / duration);
 
-        // If following a target (hole), update base position each frame
+        // Base position: either follow the target (the hole) or stay fixed
         Vector3 basePos = followTarget ? followTarget.position + followOffset : startPos;
-        Vector3 currentPos = Vector3.Lerp(basePos, basePos + Vector3.up * riseDistance, EaseOutCubic(normalized));
+
+        // Scale factor based on hole size (same logic as font scaling)
+        float scaleFactor = followTarget ? Mathf.Clamp(followTarget.localScale.x, 0.5f, 3f) : 1f;
+
+        // Adjust rise distance according to hole size
+        float rise = riseDistance * scaleFactor;
+
+        // Smooth upward movement using cubic easing
+        Vector3 currentPos = Vector3.Lerp(basePos, basePos + Vector3.up * rise, EaseOutCubic(normalized));
         transform.position = currentPos;
 
+        // Fade out over time
         SetAlpha(1f - normalized);
 
+        // When animation completes, return object to the pool or disable it
         if (normalized >= 1f)
         {
             if (pool) pool.Despawn(gameObject);
             else gameObject.SetActive(false);
         }
     }
+
 
     void SetAlpha(float a)
     {
