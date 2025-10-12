@@ -93,7 +93,7 @@ public class PathFollower : MonoBehaviour
         if (!flipOnBacktrack) return;
 
         // direction: +1 forward (no mirror), -1 backward (mirror on vertical axis)
-        if (_sr != null)
+        if (_sr)
         {
             // flip sprite horizontally when going backward
             _sr.flipX = (direction == -1);

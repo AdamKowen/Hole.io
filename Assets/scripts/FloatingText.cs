@@ -24,7 +24,7 @@ public class FloatingText : MonoBehaviour
     public void Play(string text, Vector3 worldPos, ObjectPool ownerPool, Transform target = null)
     {
         pool = ownerPool;
-        if (tmp != null) tmp.text = text;
+        if (tmp) tmp.text = text;
         followTarget = target;
         followOffset = worldPos - (target ? target.position : Vector3.zero);
 
@@ -58,7 +58,7 @@ public class FloatingText : MonoBehaviour
 
     void SetAlpha(float a)
     {
-        if (tmp == null) return;
+        if (!tmp) return;
         var c = tmp.color;
         c.a = a;
         tmp.color = c;

@@ -9,6 +9,12 @@ public class MinimapSimpleURP : MonoBehaviour
     [SerializeField] private float zoom = 30f;
 
     Camera cam;
+    private Camera _camera;
+
+    private void Start()
+    {
+        _camera = GetComponent<Camera>();
+    }
 
     void OnEnable()
     {
@@ -18,7 +24,7 @@ public class MinimapSimpleURP : MonoBehaviour
 
     void Update()
     {
-        if (!cam) cam = GetComponent<Camera>();
+        if (!cam) cam = _camera;
         cam.orthographic = true;
         cam.orthographicSize = Mathf.Max(0.001f, zoom);
 

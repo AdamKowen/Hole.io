@@ -128,6 +128,7 @@ public class HoleController : MonoBehaviour
             SetSpriteOpacity(sw, 1f);
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     IEnumerator SwallowRoutine(Swallowable sw)
     {
         sw.IsBeingSwallowed = true;
@@ -220,7 +221,7 @@ public class HoleController : MonoBehaviour
     // Helper to get half-size of the hole in world units (uses collider bounds)
     Vector2 GetHalfSizeWorld()
     {
-        if (_triggerCol == null) return Vector2.zero;
+        if (!_triggerCol) return Vector2.zero;
         var e = _triggerCol.bounds.extents; // world-space half-size
         return new Vector2(e.x, e.y);
     }

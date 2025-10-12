@@ -42,7 +42,7 @@ public class CameraFollowZoom2D : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_cam == null || target == null) return;
+        if (!_cam || !target) return;
 
         // Decide desired size for this frame
         float desiredSize = menuMode ? menuOrthoSize : GetDesiredSizeByTarget(target);
@@ -61,7 +61,7 @@ public class CameraFollowZoom2D : MonoBehaviour
 
             Vector3 desiredPos = target.position + offset;
 
-            if (worldBounds != null)
+            if (worldBounds)
             {
                 // clamp using current camera size (or desiredSize, either is fine here)
                 float halfH = desiredSize;
@@ -89,7 +89,7 @@ public class CameraFollowZoom2D : MonoBehaviour
 
     private float GetDesiredSizeByTarget(Transform t)
     {
-        if (t == null) return baseOrthoSize;
+        if (!t) return baseOrthoSize;
         float r = Mathf.Max(t.localScale.x, t.localScale.y) * 0.5f;
         return baseOrthoSize + r * zoomPerUnitRadius;
     }

@@ -8,14 +8,14 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            if (_instance != null)
+            if (_instance)
             {
                 return _instance;
             }
 
             _instance = FindAnyObjectByType<T>();
 
-            if (_instance == null)
+            if (!_instance)
             {
                 var singletonObject = new GameObject(typeof(T).Name);
                 _instance = singletonObject.AddComponent<T>();
