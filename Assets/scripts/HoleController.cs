@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; // keeping track of who we faded
+using System.Collections.Generic; 
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class HoleController : MonoBehaviour
@@ -44,9 +44,18 @@ public class HoleController : MonoBehaviour
     [Header("Control")]
     [SerializeField] private bool isFrozen = false;
 
+    // *** NEW: Touch Control (minimal) ***
+    [Header("Touch Control")]
+    [SerializeField] private bool useTouchMovement = true;
+    [SerializeField] private Camera gameplayCamera;
+
     Rigidbody2D _rb;
     Vector2 _input;
     Collider2D _triggerCol;
+
+    // NEW: touch target data
+    Vector2 _touchTarget;
+    bool _hasTouchTarget = false;
 
     // Points accumulated since last level-up (level up every +10 points)
     int _pointsSinceLevelUp = 0;
@@ -63,22 +72,67 @@ public class HoleController : MonoBehaviour
         _rb.freezeRotation = true;
 
         if (_triggerCol != null) _triggerCol.isTrigger = true;
+
+        // camera fallback
+        if (!gameplayCamera)
+            gameplayCamera = Camera.main;
     }
 
     void Update()
     {
         if (isFrozen) return;
-        _input.x = Input.GetAxisRaw("Horizontal");
-        _input.y = Input.GetAxisRaw("Vertical");
-        _input.Normalize();
+
+        // Touch input 
+        if (useTouchMovement && Input.touchCount > 0 && gameplayCamera != null)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began ||
+                touch.phase == TouchPhase.Moved ||
+                touch.phase == TouchPhase.Stationary)
+            {
+                Vector3 worldPos = gameplayCamera.ScreenToWorldPoint(touch.position);
+                _touchTarget = new Vector2(worldPos.x, worldPos.y);
+                _hasTouchTarget = true;
+            }
+            else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+            {
+                _hasTouchTarget = false;
+            }
+        }
+        else
+        {
+            // No touch (or disabled) → normal keyboard input
+            _hasTouchTarget = false;
+
+            _input.x = Input.GetAxisRaw("Horizontal");
+            _input.y = Input.GetAxisRaw("Vertical");
+            _input.Normalize();
+        }
     }
 
     void FixedUpdate()
     {
         if (isFrozen) return;
-        Vector2 targetPos = _rb.position + _input * (moveSpeed * Time.fixedDeltaTime);
 
-        // NEW: clamp to movementBounds so the hole gets "stuck" at the edge
+        Vector2 targetPos;
+
+        // if we have a touch target, move toward it
+        if (useTouchMovement && _hasTouchTarget)
+        {
+            targetPos = Vector2.MoveTowards(
+                _rb.position,
+                _touchTarget,
+                moveSpeed * Time.fixedDeltaTime
+            );
+        }
+        else
+        {
+            // keyboard movement
+            targetPos = _rb.position + _input * (moveSpeed * Time.fixedDeltaTime);
+        }
+
+        // Clamp to movementBounds so the hole gets "stuck" at the edge
         if (movementBounds)
         {
             Bounds b = movementBounds.bounds;
@@ -106,7 +160,7 @@ public class HoleController : MonoBehaviour
         var sw = GetSwallowableFromCollider(other);
         if (sw == null || sw.IsBeingSwallowed) return;
 
-    if (holeLevel >= sw.RequiredLevel)
+        if (holeLevel >= sw.RequiredLevel)
         {
             SetSpriteOpacity(sw, 1f);
             _faded.Remove(sw);
@@ -262,6 +316,4 @@ public class HoleController : MonoBehaviour
         _input = Vector2.zero;
         if (_rb) _rb.linearVelocity = Vector2.zero;
     }
-
-
 }
