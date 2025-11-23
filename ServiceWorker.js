@@ -1,9 +1,9 @@
-const cacheName = "AlonAndAdam-College.io-1.0";
+const cacheName = "AdamAndAlon-Hole.io-inspired game-1.0";
 const contentToCache = [
-    "Build/BUILDWEBGL!!!!.loader.js",
-    "Build/BUILDWEBGL!!!!.framework.js",
-    "Build/BUILDWEBGL!!!!.data",
-    "Build/BUILDWEBGL!!!!.wasm",
+    "Build/GameBuild.loader.js",
+    "Build/GameBuild.framework.js",
+    "Build/GameBuild.data",
+    "Build/GameBuild.wasm",
     "TemplateData/style.css"
 
 ];

@@ -1,6 +1,6 @@
 {
-    "name": "Hole.io",
-    "short_name": "Hole.io",
+    "name": "Hole.io-inspired game",
+    "short_name": "Hole.io-inspired game",
     "start_url": "index.html",
     "display": "fullscreen",
     "background_color": "#231F20",
